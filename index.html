@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://unpkg.com/dom-to-image-more@3.4.0/dist/dom-to-image-more.min.js"></script>
   <style>
     /* === RESET === */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -49,6 +49,9 @@
       --t-badge:var(--s-badge);
       --t-bt:   var(--s-bt);
       --t-glow: var(--s-glow);
+      --chip-bg: #ddf2ed;
+      --chip-border: #b0d8d2;
+      --header-acc-border: #b8dcd6;
     }
     body[data-theme="kiralik"] {
       --t-dark: var(--k-dark);
@@ -57,6 +60,9 @@
       --t-badge:var(--k-badge);
       --t-bt:   var(--k-bt);
       --t-glow: var(--k-glow);
+      --chip-bg: #fdeedd;
+      --chip-border: #f5cfa0;
+      --header-acc-border: #f0d0b0;
     }
 
     /* === LAYOUT === */
@@ -167,7 +173,7 @@
     .feature-label:hover { border-color: var(--border-light); color: var(--txt); }
     .feature-label svg { width: 15px; height: 15px; flex-shrink: 0; opacity: .6; transition: opacity .15s; }
     .feature-cb:checked + .feature-label {
-      background: color-mix(in srgb, var(--t-acc) 14%, var(--input-bg));
+      background: #2a2520;
       border-color: var(--t-acc); color: var(--txt);
     }
     .feature-cb:checked + .feature-label svg { opacity: 1; color: var(--t-acc); }
@@ -225,7 +231,7 @@
     .card-header {
       background: #ffffff;
       padding: 14px 18px 12px; flex-shrink: 0;
-      border-bottom: 2px solid color-mix(in srgb, var(--t-acc) 30%, #e8e4de);
+      border-bottom: 2px solid var(--header-acc-border);
     }
     .card-header-top {
       display: flex; align-items: center; justify-content: space-between; gap: 8px;
@@ -308,7 +314,7 @@
     /* Footer */
     .card-footer {
       margin-top: auto;
-      background: linear-gradient(135deg, var(--t-dark) 0%, color-mix(in srgb, var(--t-dark) 70%, var(--t-mid)) 100%);
+      background: linear-gradient(135deg, var(--t-dark) 0%, var(--t-mid) 100%);
       padding: 16px 22px;
       display: flex; align-items: center; justify-content: space-between;
       flex-shrink: 0; position: relative;
@@ -870,26 +876,23 @@
   async function download() {
     showToast('Görsel hazırlanıyor...');
     try {
-      const cvs = await html2canvas(card, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#faf7f0',
-        logging: false,
-        width: card.offsetWidth,
-        height: card.offsetHeight,
-        onclone: (doc) => {
-          doc.querySelectorAll('svg').forEach(s => {
-            if (!s.getAttribute('xmlns')) s.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-          });
+      const scale = 2;
+      const dataUrl = await domtoimage.toPng(card, {
+        width:  card.offsetWidth  * scale,
+        height: card.offsetHeight * scale,
+        style: {
+          transform: `scale(${scale})`,
+          transformOrigin: 'top left',
+          width:  card.offsetWidth  + 'px',
+          height: card.offsetHeight + 'px',
         },
       });
       const a = document.createElement('a');
       a.download = `ilan-${state.ilanTuru}-${Date.now()}.png`;
-      a.href = cvs.toDataURL('image/png');
+      a.href = dataUrl;
       a.click();
       showToast('Görsel indirildi ✓');
-    } catch(err) { showToast('İndirme başarısız: ' + (err && err.message ? err.message : '')); }
+    } catch(err) { showToast('İndirme başarısız: ' + (err && err.message ? err.message : 'bilinmiyor')); }
   }
 
   /* ── RESET ── */
