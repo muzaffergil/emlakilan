@@ -340,10 +340,15 @@
     .photo-upload-area {
       border: 2px dashed var(--border-light); border-radius: 10px;
       overflow: hidden; cursor: pointer; transition: border-color .2s;
+      position: relative;
     }
     .photo-upload-area:hover { border-color: var(--t-acc); }
     .photo-upload-area.has-photo { border-style: solid; border-color: var(--t-acc); cursor: default; }
-    #foto-input { display: none; }
+    #foto-input {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      opacity: 0; cursor: pointer; z-index: 3;
+    }
+    .photo-upload-area.has-photo #foto-input { display: none; }
     .photo-placeholder {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 5px; padding: 22px 16px; color: var(--txt-dim); text-align: center;
@@ -729,9 +734,6 @@
       update();
     }
 
-    photoArea.addEventListener('click', e => {
-      if (!photoArea.classList.contains('has-photo')) fotoInput.click();
-    });
     fotoInput.addEventListener('change', () => {
       const file = fotoInput.files[0];
       if (!file) return;
