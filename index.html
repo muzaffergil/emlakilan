@@ -220,7 +220,7 @@
     /* === CARD === */
     #card {
       width: 100%; aspect-ratio: 9/16;
-      background: #faf7f0;
+      background: #F7F4EE;
       border-radius: 18px; overflow: hidden;
       display: flex; flex-direction: column;
       font-family: 'Plus Jakarta Sans', sans-serif;
@@ -230,105 +230,97 @@
     /* Card header */
     .card-header {
       background: #ffffff;
-      padding: 14px 18px 12px; flex-shrink: 0;
-      border-bottom: 2px solid var(--header-acc-border);
+      padding: 12px 18px 11px; flex-shrink: 0;
+      border-top: 5px solid var(--t-acc);
+      border-bottom: 1px solid #EDE8E0;
     }
     .card-header-top {
       display: flex; align-items: center; justify-content: space-between; gap: 8px;
     }
     .card-badge {
       display: inline-flex; align-items: center; gap: 4px;
-      padding: 6px 14px; border-radius: 20px;
-      font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 6px;
+      font-size: 11.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
       background: var(--t-acc); color: var(--t-bt);
       flex-shrink: 0;
     }
     .card-header-logo {
-      height: 68px; width: auto; object-fit: contain; display: block;
+      height: 62px; width: auto; object-fit: contain; display: block;
       flex-shrink: 0;
     }
-    .card-header-emoji { font-size: 36px; line-height: 1; flex-shrink: 0; }
-    .card-header-left { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; }
+    .card-header-emoji { font-size: 34px; line-height: 1; flex-shrink: 0; opacity: .85; }
+    .card-header-left { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; }
     .card-mulk {
-      font-size: 12px; font-weight: 700; color: var(--t-mid);
-      letter-spacing: .07em; text-transform: uppercase;
+      font-size: 11px; font-weight: 700; color: var(--t-mid);
+      letter-spacing: .1em; text-transform: uppercase;
     }
-    .card-headline-wrap { padding: 20px 22px 0; flex-shrink: 0; }
+
+    /* Headline */
+    .card-headline-wrap { padding: 18px 22px 0; flex-shrink: 0; }
     .card-headline {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(24px, 6.5vw, 34px); font-weight: 900;
-      color: #1e1a14; line-height: 1.25; word-break: break-word;
+      font-size: clamp(22px, 6vw, 30px); font-weight: 900;
+      color: #1a1710; line-height: 1.25; word-break: break-word;
     }
     .card-headline.ph { color: #c8bfb0; font-style: italic; }
 
     /* Divider */
     .card-divider {
-      height: 1px; margin: 14px 22px;
-      background: linear-gradient(90deg, transparent, #d4cfc8, transparent);
+      height: 1px; margin: 12px 22px;
+      background: #EDE8E0;
       flex-shrink: 0;
     }
 
     /* Details */
-    .card-details {
-      padding: 0 22px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0;
-    }
+    .card-details { padding: 0 22px; display: flex; flex-direction: column; gap: 0; flex-shrink: 0; }
     .card-detail {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 15.5px; color: #3a3428;
+      display: flex; align-items: center; gap: 10px;
+      font-size: 14.5px; color: #3a3428;
+      padding: 7px 0;
+      border-bottom: 1px solid #F0EBE2;
     }
-    .detail-ico { font-size: 20px; line-height: 1; flex-shrink: 0; }
+    .card-detail:last-child { border-bottom: none; }
+    .detail-ico { font-size: 18px; line-height: 1; flex-shrink: 0; }
     .detail-val { font-weight: 600; }
-    .detail-sep { color: #b8b0a4; margin: 0 4px; }
+    .detail-sep { color: #c8c0b4; margin: 0 4px; font-weight: 400; }
 
-    /* Features on card */
-    .card-features-wrap {
-      padding: 0 22px; flex-shrink: 0;
-    }
+    /* Features */
+    .card-features-wrap { padding: 0 22px; flex-shrink: 0; }
     .card-features-title {
-      font-size: 11px; font-weight: 700; letter-spacing: .1em;
-      text-transform: uppercase; color: #9a9288; margin-bottom: 6px;
+      font-size: 10px; font-weight: 800; letter-spacing: .12em;
+      text-transform: uppercase; color: #a8a098; margin-bottom: 8px;
     }
-    .card-features {
-      display: flex; flex-wrap: wrap; gap: 4px;
-    }
+    .card-features { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; }
     .card-feat-chip {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 6px 13px 6px 10px;
-      border-radius: 20px;
-      background: #f0ece4;
-      border: 1px solid #d8d0c4;
-      font-size: 13px; font-weight: 600; color: #3a3428;
+      display: flex; align-items: center; gap: 7px;
+      font-size: 12.5px; font-weight: 600; color: #3a3428;
+      background: none; border: none; padding: 2px 0;
     }
-    .card-feat-chip svg {
-      width: 16px; height: 16px; flex-shrink: 0;
-      color: var(--t-mid);
-    }
+    .card-feat-chip svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--t-acc); }
 
     /* Description */
     .card-description {
-      padding: 0 22px; font-size: 13.5px; color: #6a6055; line-height: 1.6;
+      padding: 0 22px; font-size: 12.5px; color: #7a7268; line-height: 1.6;
       display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
       overflow: hidden; flex-shrink: 0;
     }
 
     /* Footer */
     .card-footer {
-      margin-top: auto;
-      background: linear-gradient(135deg, var(--t-dark) 0%, var(--t-mid) 100%);
-      padding: 16px 22px;
-      display: flex; align-items: center; justify-content: space-between;
-      flex-shrink: 0; position: relative;
+      margin-top: auto; background: #1C1A14;
+      padding: 14px 22px;
+      display: flex; align-items: center; gap: 14px;
+      flex-shrink: 0;
     }
-    .card-footer::before {
-      content: ''; position: absolute; top: 0; left: 18px; right: 18px;
-      height: 1px; background: rgba(255,255,255,.12);
+    .card-footer-divider {
+      width: 1px; height: 28px; background: rgba(255,255,255,.15); flex-shrink: 0;
     }
     .card-contact-row {
-      display: flex; align-items: center; gap: 5px;
-      font-size: 14px; color: rgba(255,255,255,.92); font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: rgba(255,255,255,.88); font-weight: 500;
     }
-    .card-contact-row + .card-contact-row { margin-top: 4px; }
-    .card-contact-ico { font-size: 16px; }
+    .card-contact-row + .card-contact-row { margin-top: 3px; }
+    .card-contact-ico { font-size: 14px; }
     .card-footer-logo { display: none; }
     .card-logo-bar { display: none; }
 
@@ -784,13 +776,9 @@
     const hasContact = s.telefon || s.adSoyad;
     const footer = hasContact ? `
       <div class="card-footer">
-        <div>
-          ${s.telefon ? `<div class="card-contact-row"><span class="card-contact-ico">📞</span><span>${esc(s.telefon)}</span></div>` : ''}
-          ${s.adSoyad ? `<div class="card-contact-row"><span class="card-contact-ico">👤</span><span>${esc(s.adSoyad)}</span></div>` : ''}
-        </div>
-        <div class="card-footer-logo">
-          <img src="tag.png" class="card-logo-img" alt="TAG">
-        </div>
+        ${s.telefon ? `<div class="card-contact-row"><span class="card-contact-ico">📞</span><span>${esc(s.telefon)}</span></div>` : ''}
+        ${s.telefon && s.adSoyad ? `<div class="card-footer-divider"></div>` : ''}
+        ${s.adSoyad ? `<div class="card-contact-row"><span class="card-contact-ico">👤</span><span>${esc(s.adSoyad)}</span></div>` : ''}
       </div>` : '';
 
     card.innerHTML = `
