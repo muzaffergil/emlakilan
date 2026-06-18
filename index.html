@@ -479,15 +479,9 @@
         <input type="text" id="baslik" class="form-input" placeholder="Örn: Deniz Manzaralı Lüks Daire">
       </div>
 
-      <div class="form-row-2">
-        <div class="form-section">
-          <label class="section-label">Fiyat (TL)</label>
-          <input type="number" id="fiyat" class="form-input" placeholder="2500000" min="0">
-        </div>
-        <div class="form-section">
-          <label class="section-label">Metrekare (m²)</label>
-          <input type="number" id="metrekare" class="form-input" placeholder="120" min="0">
-        </div>
+      <div class="form-section">
+        <label class="section-label">Metrekare (m²)</label>
+        <input type="number" id="metrekare" class="form-input" placeholder="120" min="0">
       </div>
 
       <div class="form-section">
@@ -620,7 +614,7 @@
   /* ── STATE ── */
   const state = {
     ilanTuru:'satilik', mulkTipi:'Daire',
-    baslik:'', fiyat:'', konum:'', metrekare:'',
+    baslik:'', konum:'', metrekare:'',
     odaSayisi:'3+1', kat:'', binaYasi:'', ozellikler:[],
     aciklama:'', telefon:'', adSoyad:'', fotolar: [],
   };
@@ -676,7 +670,6 @@
   /* ── POPULATE FORM ── */
   function populate() {
     $('baslik').value    = state.baslik;
-    $('fiyat').value     = state.fiyat;
     $('konum').value     = state.konum;
     $('metrekare').value = state.metrekare;
     $('oda-sayisi').value= state.odaSayisi;
@@ -743,7 +736,7 @@
         state.mulkTipi = b.dataset.value; update();
       }));
 
-    [['baslik','baslik'],['fiyat','fiyat'],['konum','konum'],['metrekare','metrekare'],
+    [['baslik','baslik'],['konum','konum'],['metrekare','metrekare'],
      ['kat','kat'],['bina-yasi','binaYasi'],['aciklama','aciklama'],['telefon','telefon'],['ad-soyad','adSoyad']
     ].forEach(([id,key]) => $(id).addEventListener('input', () => { state[key] = $(id).value; update(); }));
 
@@ -801,11 +794,9 @@
     const s = state;
     const label = s.ilanTuru === 'satilik' ? 'SATILIK' : 'KİRALIK';
     const emoji = MULK_EMOJI[s.mulkTipi] || '🏠';
-    const fiyatFmt = s.fiyat ? Number(s.fiyat).toLocaleString('tr-TR') + ' TL' : null;
 
     let details = '';
     if (s.konum) details += detRow('📍', esc(s.konum));
-    if (fiyatFmt) details += detRow('💰', fiyatFmt);
     const dimParts = [s.metrekare ? s.metrekare + ' m²' : null, s.odaSayisi || null].filter(Boolean);
     if (dimParts.length) details += detRow('📐', dimParts.join('<span class="detail-sep"> | </span>'));
     const infoParts = [s.kat ? s.kat + '. Kat' : null, s.binaYasi ? s.binaYasi + ' Yıllık' : null].filter(Boolean);
@@ -884,7 +875,6 @@
     const lines = [`${ico} ${label} ${s.mulkTipi.toUpperCase()}`, ''];
     if (s.baslik) lines.push(`✨ ${s.baslik}`, '');
     if (s.konum)  lines.push(`📍 ${s.konum}`);
-    if (s.fiyat)  lines.push(`💰 ${Number(s.fiyat).toLocaleString('tr-TR')} TL`);
     const dim = [s.metrekare ? s.metrekare+' m²' : null, s.odaSayisi || null].filter(Boolean);
     if (dim.length) lines.push(`📐 ${dim.join(' | ')}`);
     const info = [s.kat ? s.kat+'. Kat' : null, s.binaYasi ? s.binaYasi+' Yıllık Bina' : null].filter(Boolean);
@@ -924,6 +914,7 @@
     if (!confirm('Formu sıfırlamak istediğinizden emin misiniz?')) return;
     Object.assign(state, { ilanTuru:'satilik', mulkTipi:'Daire', baslik:'', fiyat:'', konum:'',
       metrekare:'', odaSayisi:'3+1', kat:'', binaYasi:'', ozellikler:[], aciklama:'', telefon:'', adSoyad:'', fotolar:[] });
+
     try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
     clearPhotos(); populate(); buildFeatureGrid(); renderCard();
     showToast('Form sıfırlandı');
