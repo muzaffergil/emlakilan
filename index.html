@@ -910,17 +910,7 @@
   async function download() {
     showToast('Görsel hazırlanıyor...');
     try {
-      const scale = 2;
-      const dataUrl = await domtoimage.toPng(card, {
-        width:  card.offsetWidth  * scale,
-        height: card.offsetHeight * scale,
-        style: {
-          transform: `scale(${scale})`,
-          transformOrigin: 'top left',
-          width:  card.offsetWidth  + 'px',
-          height: card.offsetHeight + 'px',
-        },
-      });
+      const dataUrl = await domtoimage.toPng(card, { scale: 2, cacheBust: true });
       const a = document.createElement('a');
       a.download = `ilan-${state.ilanTuru}-${Date.now()}.png`;
       a.href = dataUrl;
