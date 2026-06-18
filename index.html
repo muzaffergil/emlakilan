@@ -238,14 +238,14 @@
       flex-shrink: 0;
     }
     .card-header-logo {
-      height: 46px; width: auto; object-fit: contain; display: block;
+      height: 68px; width: auto; object-fit: contain; display: block;
       flex-shrink: 0;
     }
     .card-header-emoji { font-size: 36px; line-height: 1; flex-shrink: 0; }
+    .card-header-left { display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; }
     .card-mulk {
-      font-size: 11px; font-weight: 700; color: var(--t-mid);
-      letter-spacing: .08em; text-transform: uppercase; margin-top: 6px;
-      text-align: center;
+      font-size: 12px; font-weight: 700; color: var(--t-mid);
+      letter-spacing: .07em; text-transform: uppercase;
     }
     .card-headline-wrap { padding: 20px 22px 0; flex-shrink: 0; }
     .card-headline {
@@ -794,11 +794,13 @@
 
       <div class="card-header">
         <div class="card-header-top">
-          <span class="card-badge">${label}</span>
+          <div class="card-header-left">
+            <span class="card-badge">${label}</span>
+            <span class="card-mulk">${esc(s.mulkTipi)}</span>
+          </div>
           <img src="tag.png" class="card-header-logo" alt="TAG">
           <span class="card-header-emoji">${emoji}</span>
         </div>
-        <div class="card-mulk">${esc(s.mulkTipi)}</div>
       </div>
 
       ${s.foto ? `<div class="card-photo"><img src="${s.foto}" alt="Mülk"></div>` : ''}
