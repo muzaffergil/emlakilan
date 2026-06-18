@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emlak İlan Oluşturucu — WhatsApp Durum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    /* === RESET === */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 15px; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #18150f; color: #f0ece5; min-height: 100vh; overflow-x: hidden; }
+    input, select, textarea, button { font-family: inherit; }
+    button { cursor: pointer; border: none; background: none; }
+
+    /* === THEME VARIABLES === */
+    :root {
+      --panel: #1f1b14;
+      --panel-border: #2e2920;
+      --input-bg: #272119;
+      --input-border: #3a3228;
+      --border-light: #463e32;
+      --txt: #f0ece5;
+      --txt-sub: #9b9080;
+      --txt-dim: #5a5245;
+
+      /* Satılık — forest teal + gold */
+      --s-dark: #0c3d32;
+      --s-mid:  #1a7a64;
+      --s-acc:  #2bbfa0;
+      --s-badge:#00e0c0;
+      --s-bt:   #002f26;
+      --s-glow: rgba(43,191,160,.18);
+
+      /* Kiralık — terracotta + amber */
+      --k-dark: #4a1d08;
+      --k-mid:  #b85518;
+      --k-acc:  #f0803c;
+      --k-badge:#ffb060;
+      --k-bt:   #2e0e00;
+      --k-glow: rgba(240,128,60,.18);
+
+      --t-dark: var(--s-dark);
+      --t-mid:  var(--s-mid);
+      --t-acc:  var(--s-acc);
+      --t-badge:var(--s-badge);
+      --t-bt:   var(--s-bt);
+      --t-glow: var(--s-glow);
+    }
+    body[data-theme="kiralik"] {
+      --t-dark: var(--k-dark);
+      --t-mid:  var(--k-mid);
+      --t-acc:  var(--k-acc);
+      --t-badge:var(--k-badge);
+      --t-bt:   var(--k-bt);
+      --t-glow: var(--k-glow);
+    }
+
+    /* === LAYOUT === */
+    #app { display: grid; grid-template-columns: 440px 1fr; min-height: 100vh; }
+
+    /* === FORM PANEL === */
+    #form-panel {
+      background: var(--panel);
+      border-right: 1px solid var(--panel-border);
+      display: flex; flex-direction: column;
+      overflow-y: auto; max-height: 100vh;
+      position: sticky; top: 0;
+    }
+    #form-panel::-webkit-scrollbar { width: 3px; }
+    #form-panel::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
+
+    .panel-header {
+      display: flex; align-items: center; gap: 13px;
+      padding: 18px 24px 16px;
+      border-bottom: 1px solid var(--panel-border);
+      background: var(--panel);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .logo-mark {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--t-dark), var(--t-mid));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+      box-shadow: 0 2px 8px var(--t-glow);
+      transition: background 0.3s;
+    }
+    .panel-header h1 { font-size: 14px; font-weight: 700; color: var(--txt); }
+    .panel-header p  { font-size: 11px; color: var(--txt-sub); margin-top: 1px; }
+
+    #listing-form {
+      padding: 18px 22px 36px;
+      display: flex; flex-direction: column; gap: 18px;
+    }
+
+    /* Section */
+    .form-section { display: flex; flex-direction: column; gap: 7px; }
+    .section-label {
+      font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .09em; color: var(--txt-sub);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .section-label::after {
+      content: ''; flex: 1; height: 1px;
+      background: var(--input-border); border-radius: 1px;
+    }
+
+    /* Toggle */
+    .toggle-pill {
+      display: flex; background: var(--input-bg);
+      border-radius: 10px; padding: 3px; gap: 2px;
+      border: 1px solid var(--input-border);
+    }
+    .toggle-option {
+      flex: 1; text-align: center; padding: 8px 12px;
+      border-radius: 8px; font-size: 12.5px; font-weight: 700;
+      color: var(--txt-sub); cursor: pointer;
+      transition: color .2s, background .2s; user-select: none;
+    }
+    .toggle-option.active {
+      background: var(--t-acc); color: var(--t-bt);
+      box-shadow: 0 1px 6px rgba(0,0,0,.3);
+    }
+
+    /* Pill buttons */
+    .pill-group { display: flex; flex-wrap: wrap; gap: 5px; }
+    .pill-btn {
+      padding: 5px 13px; border-radius: 20px; font-size: 12px; font-weight: 600;
+      color: var(--txt-sub); background: var(--input-bg);
+      border: 1px solid var(--input-border); cursor: pointer; transition: all .15s;
+    }
+    .pill-btn:hover { border-color: var(--t-acc); color: var(--txt); }
+    .pill-btn.active { background: var(--t-acc); color: var(--t-bt); border-color: var(--t-acc); }
+
+    /* Inputs */
+    .form-input {
+      width: 100%; background: var(--input-bg);
+      border: 1px solid var(--input-border); border-radius: 8px;
+      padding: 9px 12px; color: var(--txt); font-size: 13px; font-weight: 500;
+      outline: none; transition: border-color .15s, box-shadow .15s;
+      -webkit-appearance: none; appearance: none;
+    }
+    .form-input::placeholder { color: var(--txt-dim); }
+    .form-input:focus { border-color: var(--t-acc); box-shadow: 0 0 0 3px var(--t-glow); }
+    select.form-input {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%239b9080' d='M5 7L0 2h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 11px center; padding-right: 30px;
+    }
+    select.form-input option { background: #1f1b14; }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    textarea.form-input { resize: vertical; min-height: 76px; line-height: 1.5; }
+
+    /* Features */
+    .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; }
+    .feature-cb { display: none; }
+    .feature-label {
+      display: flex; align-items: center; gap: 7px;
+      padding: 7px 10px; border-radius: 8px;
+      background: var(--input-bg); border: 1px solid var(--input-border);
+      cursor: pointer; font-size: 11.5px; font-weight: 500;
+      color: var(--txt-sub); transition: all .15s; user-select: none;
+    }
+    .feature-label:hover { border-color: var(--border-light); color: var(--txt); }
+    .feature-label svg { width: 15px; height: 15px; flex-shrink: 0; opacity: .6; transition: opacity .15s; }
+    .feature-cb:checked + .feature-label {
+      background: color-mix(in srgb, var(--t-acc) 14%, var(--input-bg));
+      border-color: var(--t-acc); color: var(--txt);
+    }
+    .feature-cb:checked + .feature-label svg { opacity: 1; color: var(--t-acc); }
+
+    /* Buttons */
+    .action-buttons { display: flex; flex-direction: column; gap: 7px; padding-top: 2px; }
+    .btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 11px 18px; border-radius: 10px; font-size: 13px; font-weight: 700;
+      transition: all .15s; letter-spacing: .01em;
+    }
+    .btn-primary {
+      background: var(--t-acc); color: var(--t-bt);
+      box-shadow: 0 3px 14px var(--t-glow);
+    }
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); filter: brightness(.95); }
+    .btn-secondary {
+      background: var(--input-bg); color: var(--txt);
+      border: 1px solid var(--border-light);
+    }
+    .btn-secondary:hover { border-color: var(--t-acc); color: var(--t-acc); }
+    .btn-ghost { background: transparent; color: var(--txt-dim); font-size: 12px; }
+    .btn-ghost:hover { color: #e05555; }
+
+    /* === PREVIEW PANEL === */
+    #preview-panel {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: flex-start; padding: 32px 24px 56px; gap: 14px;
+      overflow-y: auto; background: #18150f;
+    }
+    .preview-label {
+      font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--txt-dim);
+    }
+    .preview-hint { font-size: 11px; color: var(--txt-dim); }
+
+    #card-wrapper {
+      width: 100%; max-width: 400px;
+      filter: drop-shadow(0 12px 48px var(--t-glow)) drop-shadow(0 2px 20px rgba(0,0,0,.65));
+      transition: filter .35s;
+    }
+
+    /* === CARD === */
+    #card {
+      width: 100%; aspect-ratio: 9/16;
+      background: #faf7f0;
+      border-radius: 18px; overflow: hidden;
+      display: flex; flex-direction: column;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      position: relative;
+    }
+
+    /* Card header */
+    .card-header {
+      background: linear-gradient(145deg, var(--t-dark) 0%, var(--t-mid) 100%);
+      padding: 24px 22px 18px; flex-shrink: 0; position: relative; overflow: hidden;
+    }
+    .card-header::after {
+      content: '';
+      position: absolute; bottom: -24px; right: -24px;
+      width: 90px; height: 90px; border-radius: 50%;
+      background: rgba(255,255,255,.06); pointer-events: none;
+    }
+    .card-header::before {
+      content: '';
+      position: absolute; top: -30px; left: 40%;
+      width: 120px; height: 120px; border-radius: 50%;
+      background: rgba(255,255,255,.04); pointer-events: none;
+    }
+    .card-header-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+    }
+    .card-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 6px 16px; border-radius: 20px;
+      font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+      background: var(--t-badge); color: var(--t-bt);
+    }
+    .card-header-emoji { font-size: 42px; line-height: 1; opacity: .9; }
+    .card-mulk {
+      font-size: 14px; font-weight: 600; color: rgba(255,255,255,.75);
+      letter-spacing: .05em; text-transform: uppercase; margin-top: 10px;
+    }
+    .card-headline-wrap { padding: 20px 22px 0; flex-shrink: 0; }
+    .card-headline {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(24px, 6.5vw, 34px); font-weight: 900;
+      color: #1e1a14; line-height: 1.25; word-break: break-word;
+    }
+    .card-headline.ph { color: #c8bfb0; font-style: italic; }
+
+    /* Divider */
+    .card-divider {
+      height: 1px; margin: 14px 22px;
+      background: linear-gradient(90deg, transparent, #d4cfc8, transparent);
+      flex-shrink: 0;
+    }
+
+    /* Details */
+    .card-details {
+      padding: 0 22px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0;
+    }
+    .card-detail {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 15.5px; color: #3a3428;
+    }
+    .detail-ico { font-size: 20px; line-height: 1; flex-shrink: 0; }
+    .detail-val { font-weight: 600; }
+    .detail-sep { color: #b8b0a4; margin: 0 4px; }
+
+    /* Features on card */
+    .card-features-wrap {
+      padding: 0 22px; flex-shrink: 0;
+    }
+    .card-features-title {
+      font-size: 11px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: #9a9288; margin-bottom: 6px;
+    }
+    .card-features {
+      display: flex; flex-wrap: wrap; gap: 4px;
+    }
+    .card-feat-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 6px 13px 6px 10px;
+      border-radius: 20px;
+      background: #f0ece4;
+      border: 1px solid #d8d0c4;
+      font-size: 13px; font-weight: 600; color: #3a3428;
+    }
+    .card-feat-chip svg {
+      width: 16px; height: 16px; flex-shrink: 0;
+      color: var(--t-mid);
+    }
+
+    /* Description */
+    .card-description {
+      padding: 0 22px; font-size: 13.5px; color: #6a6055; line-height: 1.6;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+      overflow: hidden; flex-shrink: 0;
+    }
+
+    /* Footer */
+    .card-footer {
+      margin-top: auto;
+      background: linear-gradient(135deg, var(--t-dark) 0%, color-mix(in srgb, var(--t-dark) 70%, var(--t-mid)) 100%);
+      padding: 16px 22px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0; position: relative;
+    }
+    .card-footer::before {
+      content: ''; position: absolute; top: 0; left: 18px; right: 18px;
+      height: 1px; background: rgba(255,255,255,.12);
+    }
+    .card-contact-row {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 14px; color: rgba(255,255,255,.92); font-weight: 600;
+    }
+    .card-contact-row + .card-contact-row { margin-top: 4px; }
+    .card-contact-ico { font-size: 16px; }
+    .card-footer-logo { display: flex; align-items: center; }
+    .card-logo-img {
+      height: 52px; width: auto;
+      border-radius: 8px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,.4));
+    }
+
+    /* === PHOTO UPLOAD AREA === */
+    .photo-upload-area {
+      border: 2px dashed var(--border-light); border-radius: 10px;
+      overflow: hidden; cursor: pointer; transition: border-color .2s;
+    }
+    .photo-upload-area:hover { border-color: var(--t-acc); }
+    .photo-upload-area.has-photo { border-style: solid; border-color: var(--t-acc); cursor: default; }
+    #foto-input { display: none; }
+    .photo-placeholder {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 5px; padding: 22px 16px; color: var(--txt-dim); text-align: center;
+      pointer-events: none;
+    }
+    .photo-placeholder svg { width: 30px; height: 30px; margin-bottom: 2px; opacity: .45; }
+    .photo-placeholder strong { font-size: 13px; color: var(--txt-sub); }
+    .photo-placeholder small { font-size: 11px; }
+    #photo-preview-wrap { display: none; position: relative; }
+    #photo-preview-img { width: 100%; height: 170px; object-fit: cover; display: block; }
+    .photo-remove-btn {
+      position: absolute; top: 8px; right: 8px;
+      background: rgba(0,0,0,.7); color: #fff; border-radius: 6px;
+      padding: 4px 10px; font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: background .15s;
+    }
+    .photo-remove-btn:hover { background: rgba(200,40,40,.85); }
+
+    /* === CARD PHOTO === */
+    .card-photo { width: 100%; flex-shrink: 0; padding-top: 56%; position: relative; overflow: hidden; }
+    .card-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* === TOAST === */
+    #toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(70px);
+      background: #1c3530; color: #40d9b8;
+      border: 1px solid rgba(64,217,184,.3);
+      padding: 10px 22px; border-radius: 30px;
+      font-size: 12.5px; font-weight: 600;
+      opacity: 0; transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+      pointer-events: none; white-space: nowrap; z-index: 999;
+    }
+    #toast.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* === ANIMATE === */
+    @keyframes cardIn {
+      from { transform: scale(.985); opacity: .75; }
+      to   { transform: scale(1);    opacity: 1; }
+    }
+    #card-wrapper.pulse #card { animation: cardIn .22s ease-out forwards; }
+
+    /* === MOBILE TABS === */
+    .mobile-tabs { display: none; padding: 12px 22px 0; gap: 7px; }
+    .tab-btn {
+      flex: 1; padding: 8px; border-radius: 8px; font-size: 12.5px; font-weight: 600;
+      color: var(--txt-sub); background: var(--input-bg);
+      border: 1px solid var(--input-border); transition: all .15s;
+    }
+    .tab-btn.active { background: var(--t-acc); color: var(--t-bt); border-color: var(--t-acc); }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 880px) {
+      #app { grid-template-columns: 1fr; }
+      #form-panel { max-height: none; position: relative; overflow-y: visible; }
+      #preview-panel { padding: 20px 16px 40px; }
+      .mobile-tabs { display: flex; }
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      #listing-form { padding: 14px 14px 28px; }
+      .panel-header { padding: 14px; }
+      #card-wrapper { max-width: 290px; }
+    }
+  </style>
+</head>
+<body data-theme="satilik">
+<div id="app">
+
+  <!-- FORM PANEL -->
+  <aside id="form-panel">
+    <div class="panel-header">
+      <div class="logo-mark">🏠</div>
+      <div>
+        <h1>Emlak İlan Oluşturucu</h1>
+        <p>WhatsApp Durum Kartı</p>
+      </div>
+    </div>
+
+    <div class="mobile-tabs">
+      <button class="tab-btn active" data-tab="form">Form</button>
+      <button class="tab-btn" data-tab="preview">Önizleme</button>
+    </div>
+
+    <form id="listing-form" autocomplete="off">
+
+      <div class="form-section">
+        <label class="section-label">İlan Türü</label>
+        <div class="toggle-pill" id="ilan-turu-toggle">
+          <span class="toggle-option active" data-value="satilik">🏠 Satılık</span>
+          <span class="toggle-option" data-value="kiralik">🔑 Kiralık</span>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label class="section-label">Mülk Tipi</label>
+        <div class="pill-group" id="mulk-tipi-group">
+          <button type="button" class="pill-btn active" data-value="Daire">🏢 Daire</button>
+          <button type="button" class="pill-btn" data-value="Villa">🏡 Villa</button>
+          <button type="button" class="pill-btn" data-value="Arsa">🌿 Arsa</button>
+          <button type="button" class="pill-btn" data-value="Dükkan">🏪 Dükkan</button>
+          <button type="button" class="pill-btn" data-value="Ofis">🏢 Ofis</button>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label class="section-label">Fotoğraf</label>
+        <div class="photo-upload-area" id="photo-area">
+          <input type="file" id="foto-input" accept="image/*">
+          <div class="photo-placeholder" id="photo-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2.5"/>
+              <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/>
+              <polyline points="21,15 16,10 5,21"/>
+            </svg>
+            <strong>Fotoğraf Ekle</strong>
+            <small>JPEG veya PNG · Tıkla veya sürükle bırak</small>
+          </div>
+          <div id="photo-preview-wrap">
+            <img id="photo-preview-img" alt="Önizleme">
+            <button type="button" class="photo-remove-btn" id="photo-remove">✕ Kaldır</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label class="section-label">İlan Başlığı</label>
+        <input type="text" id="baslik" class="form-input" placeholder="Örn: Deniz Manzaralı Lüks Daire">
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-section">
+          <label class="section-label">Fiyat (TL)</label>
+          <input type="number" id="fiyat" class="form-input" placeholder="2500000" min="0">
+        </div>
+        <div class="form-section">
+          <label class="section-label">Metrekare (m²)</label>
+          <input type="number" id="metrekare" class="form-input" placeholder="120" min="0">
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label class="section-label">Konum</label>
+        <input type="text" id="konum" class="form-input" placeholder="Kadıköy, İstanbul">
+      </div>
+
+      <div class="form-row-3">
+        <div class="form-section">
+          <label class="section-label">Oda Sayısı</label>
+          <select id="oda-sayisi" class="form-input">
+            <option value="">Seç</option>
+            <option value="Stüdyo">Stüdyo</option>
+            <option value="1+0">1+0</option>
+            <option value="1+1">1+1</option>
+            <option value="2+1">2+1</option>
+            <option value="3+1" selected>3+1</option>
+            <option value="4+1">4+1</option>
+            <option value="4+2">4+2</option>
+            <option value="5+1">5+1</option>
+            <option value="5+2">5+2</option>
+            <option value="6+1">6+1</option>
+          </select>
+        </div>
+        <div class="form-section">
+          <label class="section-label">Kat</label>
+          <input type="text" id="kat" class="form-input" placeholder="5/8">
+        </div>
+        <div class="form-section">
+          <label class="section-label">Bina Yaşı</label>
+          <input type="number" id="bina-yasi" class="form-input" placeholder="10" min="0">
+        </div>
+      </div>
+
+      <div class="form-section">
+        <label class="section-label">Özellikler</label>
+        <div class="features-grid" id="ozellikler-grid"></div>
+      </div>
+
+      <div class="form-section">
+        <label class="section-label">Açıklama</label>
+        <textarea id="aciklama" class="form-input" rows="3" placeholder="Mülk hakkında ek bilgiler..."></textarea>
+      </div>
+
+      <div class="form-section">
+        <label class="section-label">İletişim</label>
+        <div class="form-row-2">
+          <input type="tel" id="telefon" class="form-input" placeholder="0532 xxx xx xx">
+          <input type="text" id="ad-soyad" class="form-input" placeholder="Ad Soyad">
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button type="button" id="btn-copy" class="btn btn-primary">📋 Metni Kopyala</button>
+        <button type="button" id="btn-download" class="btn btn-secondary">⬇️ Görsel İndir (PNG)</button>
+        <button type="button" id="btn-reset" class="btn btn-ghost">🗑️ Formu Sıfırla</button>
+      </div>
+
+    </form>
+  </aside>
+
+  <!-- PREVIEW PANEL -->
+  <main id="preview-panel">
+    <div class="preview-label">Önizleme — WhatsApp Durum Kartı</div>
+    <div id="card-wrapper">
+      <div id="card"></div>
+    </div>
+    <div class="preview-hint">Formu doldurdukça kart otomatik güncellenir</div>
+  </main>
+
+</div>
+<div id="toast"></div>
+
+<script>
+(function () {
+
+  /* ── FEATURE ICONS ── */
+  const ICONS = {
+    'Asansör': `<svg viewBox="0 0 16 17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="1.5" width="11" height="14" rx="1.5"/><line x1="8" y1="5" x2="8" y2="12"/><polyline points="5.5,7.2 8,5 10.5,7.2"/></svg>`,
+
+    'Çift Asansör': `<svg viewBox="0 0 20 17" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="0.5" y="1.5" width="8" height="14" rx="1.5"/><line x1="4.5" y1="5" x2="4.5" y2="12"/><polyline points="2.5,7.2 4.5,5 6.5,7.2"/><rect x="11.5" y="1.5" width="8" height="14" rx="1.5"/><line x1="15.5" y1="5" x2="15.5" y2="12"/><polyline points="13.5,7.2 15.5,5 17.5,7.2"/></svg>`,
+
+    'Otopark': `<svg viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3,13 L3,8 L5,4 H15 L17,8 L17,13"/><rect x="1" y="8" width="18" height="5" rx="1.5"/><circle cx="6" cy="13" r="2" fill="#faf7f0" stroke="currentColor" stroke-width="1.5"/><circle cx="14" cy="13" r="2" fill="#faf7f0" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="8" x2="12" y2="8"/></svg>`,
+
+    'Kapalı Otopark': `<svg viewBox="0 0 20 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1,15 L1,6 L10,1.5 L19,6 L19,15"/><rect x="6" y="9" width="8" height="6" rx="0.5"/><line x1="8" y1="9" x2="8" y2="15"/><line x1="12" y1="9" x2="12" y2="15"/><line x1="6" y1="12" x2="14" y2="12"/></svg>`,
+
+    'Balkon': `<svg viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="16" height="8" rx="1"/><line x1="5" y1="5" x2="5" y2="13"/><line x1="9" y1="5" x2="9" y2="13"/><line x1="13" y1="5" x2="13" y2="13"/><path d="M5.5,3 Q7,1.5 9,3 Q11,4.5 12.5,3" stroke-width="1.2"/></svg>`,
+
+    'Teras': `<svg viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="13" x2="17" y2="13"/><path d="M4,13 L4,8.5 L9,3.5 L14,8.5 L14,13"/><line x1="7" y1="13" x2="7" y2="8.5"/><line x1="11" y1="13" x2="11" y2="8.5"/></svg>`,
+
+    'Bahçe': `<svg viewBox="0 0 16 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="5.5" r="4"/><line x1="8" y1="9.5" x2="8" y2="13"/><line x1="5.5" y1="11" x2="10.5" y2="11"/><line x1="1" y1="14" x2="15" y2="14"/></svg>`,
+
+    'Ebeveyn Banyosu': `<svg viewBox="0 0 18 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5,7 C1.5,4.5 3.5,3 5.5,3 L12.5,3 C14.5,3 16.5,4.5 16.5,7"/><rect x="1.5" y="7" width="15" height="5" rx="1.5"/><line x1="4" y1="12" x2="4" y2="14"/><line x1="14" y1="12" x2="14" y2="14"/></svg>`,
+
+    'Çift Banyo': `<svg viewBox="0 0 20 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="4" cy="2.5" r="1.5"/><path d="M2,5 L2,9"/><path d="M6,5 L6,9"/><path d="M4,5 L4,7"/><line x1="2" y1="7" x2="6" y2="7"/><circle cx="13" cy="2.5" r="1.5"/><path d="M11,5 L11,9"/><path d="M15,5 L15,9"/><path d="M13,5 L13,7"/><line x1="11" y1="7" x2="15" y2="7"/></svg>`,
+
+    'Amerikan Mutfak': `<svg viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="7" width="16" height="6" rx="1"/><rect x="1" y="1" width="8" height="6" rx="1"/><line x1="10" y1="10" x2="16" y2="10"/><circle cx="3.5" cy="4" r="1" fill="currentColor" opacity=".6" stroke="none"/><circle cx="6.5" cy="4" r="1" fill="currentColor" opacity=".6" stroke="none"/></svg>`,
+
+    'Site İçi': `<svg viewBox="0 0 18 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6.5" width="12" height="9"/><polyline points="1,7 9,1 17,7"/><rect x="7" y="11" width="4" height="4"/><line x1="7" y1="13" x2="11" y2="13"/></svg>`,
+
+    'Havuz': `<svg viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1,6 Q3,4 5,6 Q7,8 9,6 Q11,4 13,6 Q15,8 17,6"/><path d="M1,10 Q3,8 5,10 Q7,12 9,10 Q11,8 13,10 Q15,12 17,10"/><line x1="5" y1="1.5" x2="5" y2="6"/><line x1="13" y1="1.5" x2="13" y2="6"/></svg>`,
+
+    'Güvenlik': `<svg viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7,1 L13,3.5 L13,8 C13,11.5 10,14 7,15 C4,14 1,11.5 1,8 L1,3.5 Z"/><polyline points="4.5,8 6.5,10 9.5,6"/></svg>`,
+
+    'Spor Salonu': `<svg viewBox="0 0 20 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="7" y1="5" x2="13" y2="5"/><rect x="4.5" y="3.5" width="2.5" height="3" rx="1"/><rect x="13" y="3.5" width="2.5" height="3" rx="1"/><rect x="1" y="2.5" width="3.5" height="5" rx="1.5"/><rect x="15.5" y="2.5" width="3.5" height="5" rx="1.5"/></svg>`,
+
+    'Depolu': `<svg viewBox="0 0 16 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="14" height="8" rx="1.5"/><polyline points="1,5 8,1.5 15,5"/><line x1="5.5" y1="9" x2="10.5" y2="9"/></svg>`,
+
+    'Doğalgaz': `<svg viewBox="0 0 12 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M6,15 C2.5,15 1,11.5 3,9 C4,7.5 4,6 3.5,4.5 C5.5,6 6,7.5 5.5,9.5 C7,8 7.5,5.5 7,3.5 C10,5.5 11,8.5 10,11.5 C9,13.5 7.5,15 6,15 Z"/></svg>`,
+
+    'Klima': `<svg viewBox="0 0 18 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="1" width="16" height="6.5" rx="2"/><line x1="4" y1="11.5" x2="4.5" y2="7.5"/><line x1="9" y1="11.5" x2="9" y2="7.5"/><line x1="14" y1="11.5" x2="13.5" y2="7.5"/><path d="M3,4 Q5.5,5.5 9,4 Q12.5,2.5 15,4" stroke-width="1.2"/></svg>`,
+
+    'Yerden Isıtma': `<svg viewBox="0 0 16 15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="1" y1="14" x2="15" y2="14"/><line x1="2" y1="11" x2="14" y2="11" stroke-dasharray="2 1.5"/><path d="M4.5,9 Q5.2,7 4.5,5 Q3.8,3 4.5,1"/><path d="M8,9 Q8.7,7 8,5 Q7.3,3 8,1"/><path d="M11.5,9 Q12.2,7 11.5,5 Q10.8,3 11.5,1"/></svg>`,
+
+    'Park Manzaralı': `<svg viewBox="0 0 22 17" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="6.5" r="4.5" fill="currentColor" opacity=".12" stroke-width="1.5"/><circle cx="6.5" cy="6.5" r="4.5" stroke-width="1.5"/><line x1="6.5" y1="11" x2="6.5" y2="15.5" stroke-width="1.5"/><line x1="13" y1="15.5" x2="19" y2="15.5" stroke-width="1.5"/><line x1="14" y1="15.5" x2="14" y2="13" stroke-width="1.5"/><line x1="18" y1="15.5" x2="18" y2="13" stroke-width="1.5"/><line x1="14" y1="13" x2="18" y2="13" stroke-width="1.5"/><circle cx="18.5" cy="4.5" r="2.2" fill="currentColor" opacity=".2" stroke-width="1.3"/><circle cx="18.5" cy="4.5" r="2.2" stroke-width="1.3"/><line x1="18.5" y1="1" x2="18.5" y2="2.3" stroke-width="1.1"/><line x1="21.5" y1="4.5" x2="20.7" y2="4.5" stroke-width="1.1"/><line x1="20.8" y1="2.2" x2="20.1" y2="2.9" stroke-width="1.1"/></svg>`,
+
+    'Ferah ve Aydınlık': `<svg viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="3" fill="currentColor" opacity=".18" stroke-width="1.5"/><circle cx="8.5" cy="8.5" r="3" stroke-width="1.5"/><line x1="8.5" y1="1" x2="8.5" y2="3" stroke-width="1.4"/><line x1="8.5" y1="14" x2="8.5" y2="16" stroke-width="1.4"/><line x1="1" y1="8.5" x2="3" y2="8.5" stroke-width="1.4"/><line x1="14" y1="8.5" x2="16" y2="8.5" stroke-width="1.4"/><line x1="3.2" y1="3.2" x2="4.6" y2="4.6" stroke-width="1.3"/><line x1="12.4" y1="12.4" x2="13.8" y2="13.8" stroke-width="1.3"/><line x1="13.8" y1="3.2" x2="12.4" y2="4.6" stroke-width="1.3"/><line x1="4.6" y1="12.4" x2="3.2" y2="13.8" stroke-width="1.3"/></svg>`,
+  };
+
+  const OZELLIKLER = [
+    'Asansör','Çift Asansör','Otopark','Kapalı Otopark','Balkon',
+    'Teras','Bahçe','Amerikan Mutfak','Ebeveyn Banyosu','Çift Banyo',
+    'Site İçi','Güvenlik','Havuz','Spor Salonu','Depolu',
+    'Doğalgaz','Klima','Yerden Isıtma','Park Manzaralı','Ferah ve Aydınlık',
+  ];
+
+  const MULK_EMOJI = { 'Daire':'🏢','Villa':'🏡','Arsa':'🌿','Dükkan':'🏪','Ofis':'🏢' };
+  const STORAGE_KEY = 'emlak_form_v2';
+
+  /* ── STATE ── */
+  const state = {
+    ilanTuru:'satilik', mulkTipi:'Daire',
+    baslik:'', fiyat:'', konum:'', metrekare:'',
+    odaSayisi:'3+1', kat:'', binaYasi:'', ozellikler:[],
+    aciklama:'', telefon:'', adSoyad:'', foto: null,
+  };
+
+  /* ── DOM ── */
+  const $ = id => document.getElementById(id);
+  const card = $('card'), wrapper = $('card-wrapper'), toast = $('toast');
+  let toastTimer = null;
+
+  /* ── STORAGE ── */
+  function save() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){} }
+  function load() {
+    try {
+      const d = localStorage.getItem(STORAGE_KEY);
+      if (d) Object.assign(state, JSON.parse(d));
+    } catch(e){}
+  }
+
+  /* ── THEME ── */
+  function applyTheme(t) {
+    document.body.dataset.theme = t;
+    document.querySelectorAll('.toggle-option').forEach(o => o.classList.toggle('active', o.dataset.value === t));
+  }
+
+  /* ── BUILD FEATURE GRID ── */
+  function buildFeatureGrid() {
+    $('ozellikler-grid').innerHTML = OZELLIKLER.map(f => {
+      const id = 'oz_' + f.replace(/\s+/g,'_').replace(/[İ]/g,'I');
+      const svgIcon = ICONS[f] || '';
+      const chk = state.ozellikler.includes(f) ? 'checked' : '';
+      return `<input type="checkbox" class="feature-cb" id="${id}" value="${f}" ${chk}>
+              <label class="feature-label" for="${id}">${svgIcon}${esc(f)}</label>`;
+    }).join('');
+
+    $('ozellikler-grid').querySelectorAll('.feature-cb').forEach(cb => {
+      cb.addEventListener('change', () => {
+        state.ozellikler = cb.checked
+          ? [...new Set([...state.ozellikler, cb.value])]
+          : state.ozellikler.filter(o => o !== cb.value);
+        update();
+      });
+    });
+  }
+
+  /* ── POPULATE FORM ── */
+  function populate() {
+    $('baslik').value    = state.baslik;
+    $('fiyat').value     = state.fiyat;
+    $('konum').value     = state.konum;
+    $('metrekare').value = state.metrekare;
+    $('oda-sayisi').value= state.odaSayisi;
+    $('kat').value       = state.kat;
+    $('bina-yasi').value = state.binaYasi;
+    $('aciklama').value  = state.aciklama;
+    $('telefon').value   = state.telefon;
+    $('ad-soyad').value  = state.adSoyad;
+    applyTheme(state.ilanTuru);
+    document.querySelectorAll('#mulk-tipi-group .pill-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.value === state.mulkTipi));
+  }
+
+  /* ── PHOTO HELPERS (declared before bind & reset) ── */
+  function clearPhoto() {
+    state.foto = null;
+    const fotoInput = $('foto-input');
+    if (fotoInput) fotoInput.value = '';
+    const img = $('photo-preview-img');
+    if (img) img.src = '';
+    const ph = $('photo-placeholder');
+    if (ph) ph.style.display = '';
+    const pw = $('photo-preview-wrap');
+    if (pw) pw.style.display = 'none';
+    const area = $('photo-area');
+    if (area) area.classList.remove('has-photo');
+  }
+
+  /* ── BIND EVENTS ── */
+  function bind() {
+    document.querySelectorAll('.toggle-option').forEach(o =>
+      o.addEventListener('click', () => { state.ilanTuru = o.dataset.value; applyTheme(state.ilanTuru); update(); }));
+
+    document.querySelectorAll('#mulk-tipi-group .pill-btn').forEach(b =>
+      b.addEventListener('click', () => {
+        document.querySelectorAll('#mulk-tipi-group .pill-btn').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        state.mulkTipi = b.dataset.value; update();
+      }));
+
+    [['baslik','baslik'],['fiyat','fiyat'],['konum','konum'],['metrekare','metrekare'],
+     ['kat','kat'],['bina-yasi','binaYasi'],['aciklama','aciklama'],['telefon','telefon'],['ad-soyad','adSoyad']
+    ].forEach(([id,key]) => $(id).addEventListener('input', () => { state[key] = $(id).value; update(); }));
+
+    $('oda-sayisi').addEventListener('change', () => { state.odaSayisi = $('oda-sayisi').value; update(); });
+    $('btn-copy').addEventListener('click', copyText);
+    $('btn-download').addEventListener('click', download);
+    $('btn-reset').addEventListener('click', reset);
+
+    // Photo upload
+    const photoArea = $('photo-area');
+    const fotoInput = $('foto-input');
+    const photoPlaceholder = $('photo-placeholder');
+    const photoPreviewWrap = $('photo-preview-wrap');
+    const photoPreviewImg = $('photo-preview-img');
+
+    function setPhoto(dataUrl) {
+      state.foto = dataUrl;
+      photoPreviewImg.src = dataUrl;
+      photoPlaceholder.style.display = 'none';
+      photoPreviewWrap.style.display = 'block';
+      photoArea.classList.add('has-photo');
+      update();
+    }
+
+    photoArea.addEventListener('click', e => {
+      if (!photoArea.classList.contains('has-photo')) fotoInput.click();
+    });
+    fotoInput.addEventListener('change', () => {
+      const file = fotoInput.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => setPhoto(e.target.result);
+      reader.readAsDataURL(file);
+    });
+    $('photo-remove').addEventListener('click', e => { e.stopPropagation(); clearPhoto(); });
+
+    // Drag & drop
+    photoArea.addEventListener('dragover', e => { e.preventDefault(); photoArea.style.borderColor = 'var(--t-acc)'; });
+    photoArea.addEventListener('dragleave', () => { if (!photoArea.classList.contains('has-photo')) photoArea.style.borderColor = ''; });
+    photoArea.addEventListener('drop', e => {
+      e.preventDefault(); photoArea.style.borderColor = '';
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = ev => setPhoto(ev.target.result);
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Restore photo if saved
+    if (state.foto) { photoPreviewImg.src = state.foto; photoPlaceholder.style.display = 'none'; photoPreviewWrap.style.display = 'block'; photoArea.classList.add('has-photo'); }
+
+    document.querySelectorAll('.tab-btn').forEach(btn =>
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const tab = btn.dataset.tab;
+        $('listing-form').style.display = tab === 'form' ? '' : 'none';
+        $('preview-panel').style.display = tab === 'preview' ? '' : 'none';
+      }));
+  }
+
+  /* ── CARD RENDER ── */
+  function renderCard() {
+    const s = state;
+    const label = s.ilanTuru === 'satilik' ? 'SATILIK' : 'KİRALIK';
+    const emoji = MULK_EMOJI[s.mulkTipi] || '🏠';
+    const fiyatFmt = s.fiyat ? Number(s.fiyat).toLocaleString('tr-TR') + ' TL' : null;
+
+    let details = '';
+    if (s.konum) details += detRow('📍', esc(s.konum));
+    if (fiyatFmt) details += detRow('💰', fiyatFmt);
+    const dimParts = [s.metrekare ? s.metrekare + ' m²' : null, s.odaSayisi || null].filter(Boolean);
+    if (dimParts.length) details += detRow('📐', dimParts.join('<span class="detail-sep"> | </span>'));
+    const infoParts = [s.kat ? s.kat + '. Kat' : null, s.binaYasi ? s.binaYasi + ' Yıllık' : null].filter(Boolean);
+    if (infoParts.length) details += detRow('🏗️', infoParts.join('<span class="detail-sep"> | </span>'));
+
+    const featureChips = s.ozellikler.map(f => {
+      const svg = (ICONS[f] || '').replace('stroke="currentColor"','stroke="var(--t-mid)"');
+      return `<span class="card-feat-chip">${svg}${esc(f)}</span>`;
+    }).join('');
+
+    const desc = s.aciklama ? `<p class="card-description">📝 ${esc(s.aciklama)}</p>` : '';
+    const hasContact = s.telefon || s.adSoyad;
+    const footer = hasContact ? `
+      <div class="card-footer">
+        <div>
+          ${s.telefon ? `<div class="card-contact-row"><span class="card-contact-ico">📞</span><span>${esc(s.telefon)}</span></div>` : ''}
+          ${s.adSoyad ? `<div class="card-contact-row"><span class="card-contact-ico">👤</span><span>${esc(s.adSoyad)}</span></div>` : ''}
+        </div>
+        <div class="card-footer-logo">
+          <img src="tag.png" class="card-logo-img" alt="TAG">
+        </div>
+      </div>` : '';
+
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-header-top">
+          <span class="card-badge">${label}</span>
+          <span class="card-header-emoji">${emoji}</span>
+        </div>
+        <div class="card-mulk">${esc(s.mulkTipi)}</div>
+      </div>
+
+      ${s.foto ? `<div class="card-photo"><img src="${s.foto}" alt="Mülk"></div>` : ''}
+
+      <div class="card-headline-wrap">
+        <h2 class="card-headline${s.baslik ? '' : ' ph'}">${esc(s.baslik || 'İlan başlığını yazın...')}</h2>
+      </div>
+
+      ${details ? `<div class="card-divider"></div><div class="card-details">${details}</div>` : ''}
+
+      ${featureChips ? `
+        <div class="card-divider"></div>
+        <div class="card-features-wrap">
+          <div class="card-features-title">Özellikler</div>
+          <div class="card-features">${featureChips}</div>
+        </div>` : ''}
+
+      ${desc ? `<div class="card-divider"></div>${desc}` : ''}
+
+      ${footer}
+    `;
+
+    wrapper.classList.remove('pulse');
+    void wrapper.offsetWidth;
+    wrapper.classList.add('pulse');
+    setTimeout(() => wrapper.classList.remove('pulse'), 250);
+  }
+
+  function detRow(ico, val) {
+    return `<div class="card-detail"><span class="detail-ico">${ico}</span><span class="detail-val">${val}</span></div>`;
+  }
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* ── TEXT GENERATOR ── */
+  function genText() {
+    const s = state;
+    const label = s.ilanTuru === 'satilik' ? 'SATILIK' : 'KİRALIK';
+    const ico = s.mulkTipi === 'Villa' ? '🏡' : s.mulkTipi === 'Arsa' ? '🌿' : s.mulkTipi === 'Dükkan' ? '🏪' : '🏠';
+    const lines = [`${ico} ${label} ${s.mulkTipi.toUpperCase()}`, ''];
+    if (s.baslik) lines.push(`✨ ${s.baslik}`, '');
+    if (s.konum)  lines.push(`📍 ${s.konum}`);
+    if (s.fiyat)  lines.push(`💰 ${Number(s.fiyat).toLocaleString('tr-TR')} TL`);
+    const dim = [s.metrekare ? s.metrekare+' m²' : null, s.odaSayisi || null].filter(Boolean);
+    if (dim.length) lines.push(`📐 ${dim.join(' | ')}`);
+    const info = [s.kat ? s.kat+'. Kat' : null, s.binaYasi ? s.binaYasi+' Yıllık Bina' : null].filter(Boolean);
+    if (info.length) lines.push(`🏗️ ${info.join(' | ')}`);
+    if (s.ozellikler.length) { lines.push(''); s.ozellikler.forEach(f => lines.push(`✅ ${f}`)); }
+    if (s.aciklama) { lines.push('', `📝 ${s.aciklama}`); }
+    if (s.telefon || s.adSoyad) {
+      lines.push('');
+      if (s.telefon) lines.push(`📞 ${s.telefon}`);
+      if (s.adSoyad) lines.push(`👤 ${s.adSoyad}`);
+    }
+    return lines.join('\n');
+  }
+
+  /* ── COPY ── */
+  async function copyText() {
+    try { await navigator.clipboard.writeText(genText()); }
+    catch { const t = Object.assign(document.createElement('textarea'), {value: genText(), style: 'position:fixed;opacity:0'}); document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); }
+    showToast('Metin panoya kopyalandı ✓');
+  }
+
+  /* ── DOWNLOAD ── */
+  async function download() {
+    showToast('Görsel hazırlanıyor...');
+    try {
+      const cvs = await html2canvas(card, { scale:2, useCORS:true, backgroundColor:null, logging:false });
+      const a = document.createElement('a');
+      a.download = `ilan-${state.ilanTuru}-${Date.now()}.png`;
+      a.href = cvs.toDataURL('image/png');
+      a.click();
+      showToast('Görsel indirildi ✓');
+    } catch { showToast('İndirme başarısız'); }
+  }
+
+  /* ── RESET ── */
+  function reset() {
+    if (!confirm('Formu sıfırlamak istediğinizden emin misiniz?')) return;
+    Object.assign(state, { ilanTuru:'satilik', mulkTipi:'Daire', baslik:'', fiyat:'', konum:'',
+      metrekare:'', odaSayisi:'3+1', kat:'', binaYasi:'', ozellikler:[], aciklama:'', telefon:'', adSoyad:'', foto:null });
+    try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
+    clearPhoto(); populate(); buildFeatureGrid(); renderCard();
+    showToast('Form sıfırlandı');
+  }
+
+  /* ── TOAST ── */
+  function showToast(msg) {
+    toast.textContent = msg; toast.classList.add('visible');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('visible'), 2800);
+  }
+
+  function update() { renderCard(); save(); }
+
+  /* ── INIT ── */
+  load(); buildFeatureGrid(); populate(); bind(); renderCard();
+
+})();
+</script>
+</body>
+</html>
