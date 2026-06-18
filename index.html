@@ -328,13 +328,10 @@
     .photo-upload-area {
       border: 2px dashed var(--border-light); border-radius: 10px;
       overflow: hidden; cursor: pointer; transition: border-color .2s;
-      position: relative;
     }
     .photo-upload-area:hover { border-color: var(--t-acc); }
-    .photo-upload-area.has-photo { border-style: solid; border-color: var(--t-acc); cursor: default; }
     #foto-input { position: fixed; top: -200vh; left: -200vw; opacity: 0; width: 1px; height: 1px; }
     label.photo-placeholder { cursor: pointer; display: flex; }
-    .photo-upload-area.has-photo label.photo-placeholder { display: none; }
     .photo-placeholder {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 5px; padding: 22px 16px; color: var(--txt-dim); text-align: center;
@@ -342,19 +339,40 @@
     .photo-placeholder svg { width: 30px; height: 30px; margin-bottom: 2px; opacity: .45; }
     .photo-placeholder strong { font-size: 13px; color: var(--txt-sub); }
     .photo-placeholder small { font-size: 11px; }
-    #photo-preview-wrap { display: none; position: relative; }
-    #photo-preview-img { width: 100%; height: 170px; object-fit: cover; display: block; }
-    .photo-remove-btn {
-      position: absolute; top: 8px; right: 8px;
-      background: rgba(0,0,0,.7); color: #fff; border-radius: 6px;
-      padding: 4px 10px; font-size: 12px; font-weight: 600;
-      cursor: pointer; transition: background .15s;
+    /* thumbnail grid */
+    .photo-thumbs { display: none; gap: 6px; padding: 10px; flex-wrap: wrap; }
+    .thumb-item { position: relative; width: 72px; height: 72px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+    .thumb-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .thumb-remove {
+      position: absolute; top: 3px; right: 3px;
+      background: rgba(0,0,0,.65); color: #fff; border: none;
+      border-radius: 50%; width: 18px; height: 18px; font-size: 11px; line-height: 18px;
+      text-align: center; cursor: pointer; padding: 0;
     }
-    .photo-remove-btn:hover { background: rgba(200,40,40,.85); }
+    .thumb-add {
+      width: 72px; height: 72px; border-radius: 8px; border: 2px dashed var(--border-light);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0; color: var(--txt-dim); transition: border-color .15s;
+    }
+    .thumb-add:hover { border-color: var(--t-acc); }
+    .thumb-add svg { width: 22px; height: 22px; opacity: .5; }
 
-    /* === CARD PHOTO === */
-    .card-photo { width: 100%; flex-shrink: 0; padding-top: 56%; position: relative; overflow: hidden; }
-    .card-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* === CARD COLLAGE === */
+    .card-collage { display: grid; gap: 2px; width: 100%; flex-shrink: 0; }
+    .card-collage .col-img { overflow: hidden; }
+    .card-collage .col-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .card-collage.n1 { grid-template-columns: 1fr; }
+    .card-collage.n1 .col-img { height: 210px; }
+    .card-collage.n2 { grid-template-columns: 1fr 1fr; }
+    .card-collage.n2 .col-img { height: 170px; }
+    .card-collage.n3 { grid-template-columns: 1fr 1fr; grid-template-rows: 105px 105px; }
+    .card-collage.n3 .col-img:first-child { grid-row: span 2; }
+    .card-collage.n4 { grid-template-columns: 1fr 1fr; }
+    .card-collage.n4 .col-img { height: 105px; }
+    .card-collage.n5 { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 120px 100px; }
+    .card-collage.n5 .col-img:first-child { grid-column: span 2; }
+    .card-collage.n6 { grid-template-columns: 1fr 1fr 1fr; }
+    .card-collage.n6 .col-img { height: 100px; }
 
     /* === TOAST === */
     #toast {
@@ -442,20 +460,17 @@
       <div class="form-section">
         <label class="section-label">Fotoğraf</label>
         <div class="photo-upload-area" id="photo-area">
-          <input type="file" id="foto-input" accept="image/*">
+          <input type="file" id="foto-input" accept="image/*" multiple>
           <label for="foto-input" class="photo-placeholder" id="photo-placeholder">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="3" width="18" height="18" rx="2.5"/>
               <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/>
               <polyline points="21,15 16,10 5,21"/>
             </svg>
-            <strong>Fotoğraf Ekle</strong>
-            <small>JPEG veya PNG · Tıkla veya sürükle bırak</small>
+            <strong>Fotoğrafları Ekle</strong>
+            <small>JPEG veya PNG · Tıkla veya sürükle bırak · En fazla 6</small>
           </label>
-          <div id="photo-preview-wrap">
-            <img id="photo-preview-img" alt="Önizleme">
-            <button type="button" class="photo-remove-btn" id="photo-remove">✕ Kaldır</button>
-          </div>
+          <div class="photo-thumbs" id="photo-thumbs"></div>
         </div>
       </div>
 
@@ -600,14 +615,14 @@
   ];
 
   const MULK_EMOJI = { 'Daire':'🏢','Villa':'🏡','Arsa':'🌿','Dükkan':'🏪','Ofis':'🏢' };
-  const STORAGE_KEY = 'emlak_form_v2';
+  const STORAGE_KEY = 'emlak_form_v3';
 
   /* ── STATE ── */
   const state = {
     ilanTuru:'satilik', mulkTipi:'Daire',
     baslik:'', fiyat:'', konum:'', metrekare:'',
     odaSayisi:'3+1', kat:'', binaYasi:'', ozellikler:[],
-    aciklama:'', telefon:'', adSoyad:'', foto: null,
+    aciklama:'', telefon:'', adSoyad:'', fotolar: [],
   };
 
   /* ── DOM ── */
@@ -620,7 +635,15 @@
   function load() {
     try {
       const d = localStorage.getItem(STORAGE_KEY);
-      if (d) Object.assign(state, JSON.parse(d));
+      if (d) { Object.assign(state, JSON.parse(d)); return; }
+      // migrate v2 → v3
+      const d2 = localStorage.getItem('emlak_form_v2');
+      if (d2) {
+        const old = JSON.parse(d2);
+        Object.assign(state, old);
+        state.fotolar = old.foto ? [old.foto] : [];
+        delete state.foto;
+      }
     } catch(e){}
   }
 
@@ -668,16 +691,44 @@
   }
 
   /* ── PHOTO HELPERS (declared before bind & reset) ── */
-  function clearPhoto() {
-    state.foto = null;
+  function renderPhotoThumbs() {
+    const placeholder = $('photo-placeholder');
+    const thumbs = $('photo-thumbs');
     const fotoInput = $('foto-input');
-    if (fotoInput) fotoInput.value = '';
-    const img = $('photo-preview-img');
-    if (img) img.src = '';
-    const pw = $('photo-preview-wrap');
-    if (pw) pw.style.display = 'none';
-    const area = $('photo-area');
-    if (area) area.classList.remove('has-photo'); /* shows label via CSS */
+    if (!placeholder || !thumbs) return;
+
+    if (state.fotolar.length === 0) {
+      placeholder.style.display = '';
+      thumbs.style.display = 'none';
+      thumbs.innerHTML = '';
+      if (fotoInput) fotoInput.value = '';
+      return;
+    }
+
+    placeholder.style.display = 'none';
+    thumbs.style.display = 'flex';
+    const addBtn = state.fotolar.length < 6 ? `
+      <label for="foto-input" class="thumb-add" title="Daha fazla ekle">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </label>` : '';
+    thumbs.innerHTML = state.fotolar.map((f, i) => `
+      <div class="thumb-item">
+        <img src="${f}" alt="">
+        <button class="thumb-remove" data-idx="${i}" type="button">×</button>
+      </div>`).join('') + addBtn;
+
+    thumbs.querySelectorAll('.thumb-remove').forEach(btn =>
+      btn.addEventListener('click', e => {
+        e.preventDefault(); e.stopPropagation();
+        state.fotolar.splice(parseInt(btn.dataset.idx), 1);
+        renderPhotoThumbs();
+        update();
+      }));
+  }
+
+  function clearPhotos() {
+    state.fotolar = [];
+    renderPhotoThumbs();
   }
 
   /* ── BIND EVENTS ── */
@@ -704,42 +755,36 @@
     // Photo upload
     const photoArea = $('photo-area');
     const fotoInput = $('foto-input');
-    const photoPlaceholder = $('photo-placeholder');
-    const photoPreviewWrap = $('photo-preview-wrap');
-    const photoPreviewImg = $('photo-preview-img');
 
-    function setPhoto(dataUrl) {
-      state.foto = dataUrl;
-      photoPreviewImg.src = dataUrl;
-      photoPreviewWrap.style.display = 'block';
-      photoArea.classList.add('has-photo'); /* hides label via CSS */
-      update();
+    function addFiles(files) {
+      const remaining = 6 - state.fotolar.length;
+      const toRead = Array.from(files).filter(f => f.type.startsWith('image/')).slice(0, remaining);
+      if (!toRead.length) return;
+      let done = 0;
+      toRead.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          state.fotolar.push(e.target.result);
+          done++;
+          if (done === toRead.length) { renderPhotoThumbs(); update(); }
+        };
+        reader.readAsDataURL(file);
+      });
+      fotoInput.value = '';
     }
 
-    fotoInput.addEventListener('change', () => {
-      const file = fotoInput.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = e => setPhoto(e.target.result);
-      reader.readAsDataURL(file);
-    });
-    $('photo-remove').addEventListener('click', e => { e.stopPropagation(); clearPhoto(); });
+    fotoInput.addEventListener('change', () => { addFiles(fotoInput.files); });
 
     // Drag & drop
     photoArea.addEventListener('dragover', e => { e.preventDefault(); photoArea.style.borderColor = 'var(--t-acc)'; });
-    photoArea.addEventListener('dragleave', () => { if (!photoArea.classList.contains('has-photo')) photoArea.style.borderColor = ''; });
+    photoArea.addEventListener('dragleave', () => { photoArea.style.borderColor = ''; });
     photoArea.addEventListener('drop', e => {
       e.preventDefault(); photoArea.style.borderColor = '';
-      const file = e.dataTransfer.files[0];
-      if (file && file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = ev => setPhoto(ev.target.result);
-        reader.readAsDataURL(file);
-      }
+      addFiles(e.dataTransfer.files);
     });
 
-    // Restore photo if saved
-    if (state.foto) { photoPreviewImg.src = state.foto; photoPreviewWrap.style.display = 'block'; photoArea.classList.add('has-photo'); }
+    // Restore photos if saved
+    renderPhotoThumbs();
 
     document.querySelectorAll('.tab-btn').forEach(btn =>
       btn.addEventListener('click', () => {
@@ -795,7 +840,10 @@
         </div>
       </div>
 
-      ${s.foto ? `<div class="card-photo"><img src="${s.foto}" alt="Mülk"></div>` : ''}
+      ${s.fotolar && s.fotolar.length ? `
+      <div class="card-collage n${Math.min(s.fotolar.length, 6)}">
+        ${s.fotolar.slice(0, 6).map(f => `<div class="col-img"><img src="${f}" alt=""></div>`).join('')}
+      </div>` : ''}
 
       <div class="card-headline-wrap">
         <h2 class="card-headline${s.baslik ? '' : ' ph'}">${esc(s.baslik || 'İlan başlığını yazın...')}</h2>
@@ -885,9 +933,9 @@
   function reset() {
     if (!confirm('Formu sıfırlamak istediğinizden emin misiniz?')) return;
     Object.assign(state, { ilanTuru:'satilik', mulkTipi:'Daire', baslik:'', fiyat:'', konum:'',
-      metrekare:'', odaSayisi:'3+1', kat:'', binaYasi:'', ozellikler:[], aciklama:'', telefon:'', adSoyad:'', foto:null });
+      metrekare:'', odaSayisi:'3+1', kat:'', binaYasi:'', ozellikler:[], aciklama:'', telefon:'', adSoyad:'', fotolar:[] });
     try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
-    clearPhoto(); populate(); buildFeatureGrid(); renderCard();
+    clearPhotos(); populate(); buildFeatureGrid(); renderCard();
     showToast('Form sıfırlandı');
   }
 
