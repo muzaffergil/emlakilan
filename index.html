@@ -221,49 +221,31 @@
       position: relative;
     }
 
-    /* Logo bar */
-    .card-logo-bar {
-      background: #0c0b08;
-      padding: 10px 20px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
-    .card-logo-bar img {
-      height: 48px; width: auto; object-fit: contain;
-      display: block;
-    }
-
     /* Card header */
     .card-header {
-      background: linear-gradient(145deg, var(--t-dark) 0%, var(--t-mid) 100%);
-      padding: 24px 22px 18px; flex-shrink: 0; position: relative; overflow: hidden;
-    }
-    .card-header::after {
-      content: '';
-      position: absolute; bottom: -24px; right: -24px;
-      width: 90px; height: 90px; border-radius: 50%;
-      background: rgba(255,255,255,.06); pointer-events: none;
-    }
-    .card-header::before {
-      content: '';
-      position: absolute; top: -30px; left: 40%;
-      width: 120px; height: 120px; border-radius: 50%;
-      background: rgba(255,255,255,.04); pointer-events: none;
+      background: #ffffff;
+      padding: 14px 18px 12px; flex-shrink: 0;
+      border-bottom: 2px solid color-mix(in srgb, var(--t-acc) 30%, #e8e4de);
     }
     .card-header-top {
-      display: flex; align-items: flex-start; justify-content: space-between;
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
     }
     .card-badge {
       display: inline-flex; align-items: center; gap: 4px;
-      padding: 6px 16px; border-radius: 20px;
-      font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
-      background: var(--t-badge); color: var(--t-bt);
+      padding: 6px 14px; border-radius: 20px;
+      font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+      background: var(--t-acc); color: var(--t-bt);
+      flex-shrink: 0;
     }
-    .card-header-emoji { font-size: 42px; line-height: 1; opacity: .9; }
+    .card-header-logo {
+      height: 46px; width: auto; object-fit: contain; display: block;
+      flex-shrink: 0;
+    }
+    .card-header-emoji { font-size: 36px; line-height: 1; flex-shrink: 0; }
     .card-mulk {
-      font-size: 14px; font-weight: 600; color: rgba(255,255,255,.75);
-      letter-spacing: .05em; text-transform: uppercase; margin-top: 10px;
+      font-size: 11px; font-weight: 700; color: var(--t-mid);
+      letter-spacing: .08em; text-transform: uppercase; margin-top: 6px;
+      text-align: center;
     }
     .card-headline-wrap { padding: 20px 22px 0; flex-shrink: 0; }
     .card-headline {
@@ -342,6 +324,7 @@
     .card-contact-row + .card-contact-row { margin-top: 4px; }
     .card-contact-ico { font-size: 16px; }
     .card-footer-logo { display: none; }
+    .card-logo-bar { display: none; }
 
     /* === PHOTO UPLOAD AREA === */
     .photo-upload-area {
@@ -812,6 +795,7 @@
       <div class="card-header">
         <div class="card-header-top">
           <span class="card-badge">${label}</span>
+          <img src="tag.png" class="card-header-logo" alt="TAG">
           <span class="card-header-emoji">${emoji}</span>
         </div>
         <div class="card-mulk">${esc(s.mulkTipi)}</div>
