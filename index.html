@@ -344,11 +344,9 @@
     }
     .photo-upload-area:hover { border-color: var(--t-acc); }
     .photo-upload-area.has-photo { border-style: solid; border-color: var(--t-acc); cursor: default; }
-    #foto-input {
-      position: absolute; inset: 0; width: 100%; height: 100%;
-      opacity: 0; cursor: pointer; z-index: 3;
-    }
-    .photo-upload-area.has-photo #foto-input { display: none; }
+    #foto-input { display: none; }
+    label.photo-placeholder { cursor: pointer; display: flex; }
+    .photo-upload-area.has-photo label.photo-placeholder { display: none; }
     .photo-placeholder {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 5px; padding: 22px 16px; color: var(--txt-dim); text-align: center;
@@ -458,7 +456,7 @@
         <label class="section-label">Fotoğraf</label>
         <div class="photo-upload-area" id="photo-area">
           <input type="file" id="foto-input" accept="image/*">
-          <div class="photo-placeholder" id="photo-placeholder">
+          <label for="foto-input" class="photo-placeholder" id="photo-placeholder">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="3" width="18" height="18" rx="2.5"/>
               <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/>
@@ -466,7 +464,7 @@
             </svg>
             <strong>Fotoğraf Ekle</strong>
             <small>JPEG veya PNG · Tıkla veya sürükle bırak</small>
-          </div>
+          </label>
           <div id="photo-preview-wrap">
             <img id="photo-preview-img" alt="Önizleme">
             <button type="button" class="photo-remove-btn" id="photo-remove">✕ Kaldır</button>
@@ -689,12 +687,10 @@
     if (fotoInput) fotoInput.value = '';
     const img = $('photo-preview-img');
     if (img) img.src = '';
-    const ph = $('photo-placeholder');
-    if (ph) ph.style.display = '';
     const pw = $('photo-preview-wrap');
     if (pw) pw.style.display = 'none';
     const area = $('photo-area');
-    if (area) area.classList.remove('has-photo');
+    if (area) area.classList.remove('has-photo'); /* shows label via CSS */
   }
 
   /* ── BIND EVENTS ── */
@@ -728,9 +724,8 @@
     function setPhoto(dataUrl) {
       state.foto = dataUrl;
       photoPreviewImg.src = dataUrl;
-      photoPlaceholder.style.display = 'none';
       photoPreviewWrap.style.display = 'block';
-      photoArea.classList.add('has-photo');
+      photoArea.classList.add('has-photo'); /* hides label via CSS */
       update();
     }
 
@@ -757,7 +752,7 @@
     });
 
     // Restore photo if saved
-    if (state.foto) { photoPreviewImg.src = state.foto; photoPlaceholder.style.display = 'none'; photoPreviewWrap.style.display = 'block'; photoArea.classList.add('has-photo'); }
+    if (state.foto) { photoPreviewImg.src = state.foto; photoPreviewWrap.style.display = 'block'; photoArea.classList.add('has-photo'); }
 
     document.querySelectorAll('.tab-btn').forEach(btn =>
       btn.addEventListener('click', () => {
