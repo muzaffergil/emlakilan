@@ -334,7 +334,7 @@
     }
     .photo-upload-area:hover { border-color: var(--t-acc); }
     .photo-upload-area.has-photo { border-style: solid; border-color: var(--t-acc); cursor: default; }
-    #foto-input { display: none; }
+    #foto-input { position: fixed; top: -200vh; left: -200vw; opacity: 0; width: 1px; height: 1px; }
     label.photo-placeholder { cursor: pointer; display: flex; }
     .photo-upload-area.has-photo label.photo-placeholder { display: none; }
     .photo-placeholder {
@@ -447,7 +447,7 @@
         <div class="photo-upload-area" id="photo-area">
           <input type="file" id="foto-input" accept="image/*">
           <label for="foto-input" class="photo-placeholder" id="photo-placeholder">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="3" width="18" height="18" rx="2.5"/>
               <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/>
               <polyline points="21,15 16,10 5,21"/>
@@ -554,45 +554,45 @@
 
   /* ── FEATURE ICONS ── */
   const ICONS = {
-    'Asansör': `<svg viewBox="0 0 16 17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="1.5" width="11" height="14" rx="1.5"/><line x1="8" y1="5" x2="8" y2="12"/><polyline points="5.5,7.2 8,5 10.5,7.2"/></svg>`,
+    'Asansör': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="1.5" width="11" height="14" rx="1.5"/><line x1="8" y1="5" x2="8" y2="12"/><polyline points="5.5,7.2 8,5 10.5,7.2"/></svg>`,
 
-    'Çift Asansör': `<svg viewBox="0 0 20 17" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="0.5" y="1.5" width="8" height="14" rx="1.5"/><line x1="4.5" y1="5" x2="4.5" y2="12"/><polyline points="2.5,7.2 4.5,5 6.5,7.2"/><rect x="11.5" y="1.5" width="8" height="14" rx="1.5"/><line x1="15.5" y1="5" x2="15.5" y2="12"/><polyline points="13.5,7.2 15.5,5 17.5,7.2"/></svg>`,
+    'Çift Asansör': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 17" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="0.5" y="1.5" width="8" height="14" rx="1.5"/><line x1="4.5" y1="5" x2="4.5" y2="12"/><polyline points="2.5,7.2 4.5,5 6.5,7.2"/><rect x="11.5" y="1.5" width="8" height="14" rx="1.5"/><line x1="15.5" y1="5" x2="15.5" y2="12"/><polyline points="13.5,7.2 15.5,5 17.5,7.2"/></svg>`,
 
-    'Otopark': `<svg viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3,13 L3,8 L5,4 H15 L17,8 L17,13"/><rect x="1" y="8" width="18" height="5" rx="1.5"/><circle cx="6" cy="13" r="2" fill="#faf7f0" stroke="currentColor" stroke-width="1.5"/><circle cx="14" cy="13" r="2" fill="#faf7f0" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="8" x2="12" y2="8"/></svg>`,
+    'Otopark': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3,13 L3,8 L5,4 H15 L17,8 L17,13"/><rect x="1" y="8" width="18" height="5" rx="1.5"/><circle cx="6" cy="13" r="2" fill="#faf7f0" stroke="currentColor" stroke-width="1.5"/><circle cx="14" cy="13" r="2" fill="#faf7f0" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="8" x2="12" y2="8"/></svg>`,
 
-    'Kapalı Otopark': `<svg viewBox="0 0 20 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1,15 L1,6 L10,1.5 L19,6 L19,15"/><rect x="6" y="9" width="8" height="6" rx="0.5"/><line x1="8" y1="9" x2="8" y2="15"/><line x1="12" y1="9" x2="12" y2="15"/><line x1="6" y1="12" x2="14" y2="12"/></svg>`,
+    'Kapalı Otopark': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1,15 L1,6 L10,1.5 L19,6 L19,15"/><rect x="6" y="9" width="8" height="6" rx="0.5"/><line x1="8" y1="9" x2="8" y2="15"/><line x1="12" y1="9" x2="12" y2="15"/><line x1="6" y1="12" x2="14" y2="12"/></svg>`,
 
-    'Balkon': `<svg viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="16" height="8" rx="1"/><line x1="5" y1="5" x2="5" y2="13"/><line x1="9" y1="5" x2="9" y2="13"/><line x1="13" y1="5" x2="13" y2="13"/><path d="M5.5,3 Q7,1.5 9,3 Q11,4.5 12.5,3" stroke-width="1.2"/></svg>`,
+    'Balkon': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="16" height="8" rx="1"/><line x1="5" y1="5" x2="5" y2="13"/><line x1="9" y1="5" x2="9" y2="13"/><line x1="13" y1="5" x2="13" y2="13"/><path d="M5.5,3 Q7,1.5 9,3 Q11,4.5 12.5,3" stroke-width="1.2"/></svg>`,
 
-    'Teras': `<svg viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="13" x2="17" y2="13"/><path d="M4,13 L4,8.5 L9,3.5 L14,8.5 L14,13"/><line x1="7" y1="13" x2="7" y2="8.5"/><line x1="11" y1="13" x2="11" y2="8.5"/></svg>`,
+    'Teras': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="13" x2="17" y2="13"/><path d="M4,13 L4,8.5 L9,3.5 L14,8.5 L14,13"/><line x1="7" y1="13" x2="7" y2="8.5"/><line x1="11" y1="13" x2="11" y2="8.5"/></svg>`,
 
-    'Bahçe': `<svg viewBox="0 0 16 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="5.5" r="4"/><line x1="8" y1="9.5" x2="8" y2="13"/><line x1="5.5" y1="11" x2="10.5" y2="11"/><line x1="1" y1="14" x2="15" y2="14"/></svg>`,
+    'Bahçe': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="5.5" r="4"/><line x1="8" y1="9.5" x2="8" y2="13"/><line x1="5.5" y1="11" x2="10.5" y2="11"/><line x1="1" y1="14" x2="15" y2="14"/></svg>`,
 
-    'Ebeveyn Banyosu': `<svg viewBox="0 0 18 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5,7 C1.5,4.5 3.5,3 5.5,3 L12.5,3 C14.5,3 16.5,4.5 16.5,7"/><rect x="1.5" y="7" width="15" height="5" rx="1.5"/><line x1="4" y1="12" x2="4" y2="14"/><line x1="14" y1="12" x2="14" y2="14"/></svg>`,
+    'Ebeveyn Banyosu': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5,7 C1.5,4.5 3.5,3 5.5,3 L12.5,3 C14.5,3 16.5,4.5 16.5,7"/><rect x="1.5" y="7" width="15" height="5" rx="1.5"/><line x1="4" y1="12" x2="4" y2="14"/><line x1="14" y1="12" x2="14" y2="14"/></svg>`,
 
-    'Çift Banyo': `<svg viewBox="0 0 20 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="4" cy="2.5" r="1.5"/><path d="M2,5 L2,9"/><path d="M6,5 L6,9"/><path d="M4,5 L4,7"/><line x1="2" y1="7" x2="6" y2="7"/><circle cx="13" cy="2.5" r="1.5"/><path d="M11,5 L11,9"/><path d="M15,5 L15,9"/><path d="M13,5 L13,7"/><line x1="11" y1="7" x2="15" y2="7"/></svg>`,
+    'Çift Banyo': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="4" cy="2.5" r="1.5"/><path d="M2,5 L2,9"/><path d="M6,5 L6,9"/><path d="M4,5 L4,7"/><line x1="2" y1="7" x2="6" y2="7"/><circle cx="13" cy="2.5" r="1.5"/><path d="M11,5 L11,9"/><path d="M15,5 L15,9"/><path d="M13,5 L13,7"/><line x1="11" y1="7" x2="15" y2="7"/></svg>`,
 
-    'Amerikan Mutfak': `<svg viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="7" width="16" height="6" rx="1"/><rect x="1" y="1" width="8" height="6" rx="1"/><line x1="10" y1="10" x2="16" y2="10"/><circle cx="3.5" cy="4" r="1" fill="currentColor" opacity=".6" stroke="none"/><circle cx="6.5" cy="4" r="1" fill="currentColor" opacity=".6" stroke="none"/></svg>`,
+    'Amerikan Mutfak': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="7" width="16" height="6" rx="1"/><rect x="1" y="1" width="8" height="6" rx="1"/><line x1="10" y1="10" x2="16" y2="10"/><circle cx="3.5" cy="4" r="1" fill="currentColor" opacity=".6" stroke="none"/><circle cx="6.5" cy="4" r="1" fill="currentColor" opacity=".6" stroke="none"/></svg>`,
 
-    'Site İçi': `<svg viewBox="0 0 18 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6.5" width="12" height="9"/><polyline points="1,7 9,1 17,7"/><rect x="7" y="11" width="4" height="4"/><line x1="7" y1="13" x2="11" y2="13"/></svg>`,
+    'Site İçi': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6.5" width="12" height="9"/><polyline points="1,7 9,1 17,7"/><rect x="7" y="11" width="4" height="4"/><line x1="7" y1="13" x2="11" y2="13"/></svg>`,
 
-    'Havuz': `<svg viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1,6 Q3,4 5,6 Q7,8 9,6 Q11,4 13,6 Q15,8 17,6"/><path d="M1,10 Q3,8 5,10 Q7,12 9,10 Q11,8 13,10 Q15,12 17,10"/><line x1="5" y1="1.5" x2="5" y2="6"/><line x1="13" y1="1.5" x2="13" y2="6"/></svg>`,
+    'Havuz': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1,6 Q3,4 5,6 Q7,8 9,6 Q11,4 13,6 Q15,8 17,6"/><path d="M1,10 Q3,8 5,10 Q7,12 9,10 Q11,8 13,10 Q15,12 17,10"/><line x1="5" y1="1.5" x2="5" y2="6"/><line x1="13" y1="1.5" x2="13" y2="6"/></svg>`,
 
-    'Güvenlik': `<svg viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7,1 L13,3.5 L13,8 C13,11.5 10,14 7,15 C4,14 1,11.5 1,8 L1,3.5 Z"/><polyline points="4.5,8 6.5,10 9.5,6"/></svg>`,
+    'Güvenlik': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7,1 L13,3.5 L13,8 C13,11.5 10,14 7,15 C4,14 1,11.5 1,8 L1,3.5 Z"/><polyline points="4.5,8 6.5,10 9.5,6"/></svg>`,
 
-    'Spor Salonu': `<svg viewBox="0 0 20 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="7" y1="5" x2="13" y2="5"/><rect x="4.5" y="3.5" width="2.5" height="3" rx="1"/><rect x="13" y="3.5" width="2.5" height="3" rx="1"/><rect x="1" y="2.5" width="3.5" height="5" rx="1.5"/><rect x="15.5" y="2.5" width="3.5" height="5" rx="1.5"/></svg>`,
+    'Spor Salonu': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="7" y1="5" x2="13" y2="5"/><rect x="4.5" y="3.5" width="2.5" height="3" rx="1"/><rect x="13" y="3.5" width="2.5" height="3" rx="1"/><rect x="1" y="2.5" width="3.5" height="5" rx="1.5"/><rect x="15.5" y="2.5" width="3.5" height="5" rx="1.5"/></svg>`,
 
-    'Depolu': `<svg viewBox="0 0 16 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="14" height="8" rx="1.5"/><polyline points="1,5 8,1.5 15,5"/><line x1="5.5" y1="9" x2="10.5" y2="9"/></svg>`,
+    'Depolu': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="14" height="8" rx="1.5"/><polyline points="1,5 8,1.5 15,5"/><line x1="5.5" y1="9" x2="10.5" y2="9"/></svg>`,
 
-    'Doğalgaz': `<svg viewBox="0 0 12 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M6,15 C2.5,15 1,11.5 3,9 C4,7.5 4,6 3.5,4.5 C5.5,6 6,7.5 5.5,9.5 C7,8 7.5,5.5 7,3.5 C10,5.5 11,8.5 10,11.5 C9,13.5 7.5,15 6,15 Z"/></svg>`,
+    'Doğalgaz': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M6,15 C2.5,15 1,11.5 3,9 C4,7.5 4,6 3.5,4.5 C5.5,6 6,7.5 5.5,9.5 C7,8 7.5,5.5 7,3.5 C10,5.5 11,8.5 10,11.5 C9,13.5 7.5,15 6,15 Z"/></svg>`,
 
-    'Klima': `<svg viewBox="0 0 18 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="1" width="16" height="6.5" rx="2"/><line x1="4" y1="11.5" x2="4.5" y2="7.5"/><line x1="9" y1="11.5" x2="9" y2="7.5"/><line x1="14" y1="11.5" x2="13.5" y2="7.5"/><path d="M3,4 Q5.5,5.5 9,4 Q12.5,2.5 15,4" stroke-width="1.2"/></svg>`,
+    'Klima': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="1" width="16" height="6.5" rx="2"/><line x1="4" y1="11.5" x2="4.5" y2="7.5"/><line x1="9" y1="11.5" x2="9" y2="7.5"/><line x1="14" y1="11.5" x2="13.5" y2="7.5"/><path d="M3,4 Q5.5,5.5 9,4 Q12.5,2.5 15,4" stroke-width="1.2"/></svg>`,
 
-    'Yerden Isıtma': `<svg viewBox="0 0 16 15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="1" y1="14" x2="15" y2="14"/><line x1="2" y1="11" x2="14" y2="11" stroke-dasharray="2 1.5"/><path d="M4.5,9 Q5.2,7 4.5,5 Q3.8,3 4.5,1"/><path d="M8,9 Q8.7,7 8,5 Q7.3,3 8,1"/><path d="M11.5,9 Q12.2,7 11.5,5 Q10.8,3 11.5,1"/></svg>`,
+    'Yerden Isıtma': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="1" y1="14" x2="15" y2="14"/><line x1="2" y1="11" x2="14" y2="11" stroke-dasharray="2 1.5"/><path d="M4.5,9 Q5.2,7 4.5,5 Q3.8,3 4.5,1"/><path d="M8,9 Q8.7,7 8,5 Q7.3,3 8,1"/><path d="M11.5,9 Q12.2,7 11.5,5 Q10.8,3 11.5,1"/></svg>`,
 
-    'Park Manzaralı': `<svg viewBox="0 0 22 17" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="6.5" r="4.5" fill="currentColor" opacity=".12" stroke-width="1.5"/><circle cx="6.5" cy="6.5" r="4.5" stroke-width="1.5"/><line x1="6.5" y1="11" x2="6.5" y2="15.5" stroke-width="1.5"/><line x1="13" y1="15.5" x2="19" y2="15.5" stroke-width="1.5"/><line x1="14" y1="15.5" x2="14" y2="13" stroke-width="1.5"/><line x1="18" y1="15.5" x2="18" y2="13" stroke-width="1.5"/><line x1="14" y1="13" x2="18" y2="13" stroke-width="1.5"/><circle cx="18.5" cy="4.5" r="2.2" fill="currentColor" opacity=".2" stroke-width="1.3"/><circle cx="18.5" cy="4.5" r="2.2" stroke-width="1.3"/><line x1="18.5" y1="1" x2="18.5" y2="2.3" stroke-width="1.1"/><line x1="21.5" y1="4.5" x2="20.7" y2="4.5" stroke-width="1.1"/><line x1="20.8" y1="2.2" x2="20.1" y2="2.9" stroke-width="1.1"/></svg>`,
+    'Park Manzaralı': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 17" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="6.5" r="4.5" fill="currentColor" opacity=".12" stroke-width="1.5"/><circle cx="6.5" cy="6.5" r="4.5" stroke-width="1.5"/><line x1="6.5" y1="11" x2="6.5" y2="15.5" stroke-width="1.5"/><line x1="13" y1="15.5" x2="19" y2="15.5" stroke-width="1.5"/><line x1="14" y1="15.5" x2="14" y2="13" stroke-width="1.5"/><line x1="18" y1="15.5" x2="18" y2="13" stroke-width="1.5"/><line x1="14" y1="13" x2="18" y2="13" stroke-width="1.5"/><circle cx="18.5" cy="4.5" r="2.2" fill="currentColor" opacity=".2" stroke-width="1.3"/><circle cx="18.5" cy="4.5" r="2.2" stroke-width="1.3"/><line x1="18.5" y1="1" x2="18.5" y2="2.3" stroke-width="1.1"/><line x1="21.5" y1="4.5" x2="20.7" y2="4.5" stroke-width="1.1"/><line x1="20.8" y1="2.2" x2="20.1" y2="2.9" stroke-width="1.1"/></svg>`,
 
-    'Ferah ve Aydınlık': `<svg viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="3" fill="currentColor" opacity=".18" stroke-width="1.5"/><circle cx="8.5" cy="8.5" r="3" stroke-width="1.5"/><line x1="8.5" y1="1" x2="8.5" y2="3" stroke-width="1.4"/><line x1="8.5" y1="14" x2="8.5" y2="16" stroke-width="1.4"/><line x1="1" y1="8.5" x2="3" y2="8.5" stroke-width="1.4"/><line x1="14" y1="8.5" x2="16" y2="8.5" stroke-width="1.4"/><line x1="3.2" y1="3.2" x2="4.6" y2="4.6" stroke-width="1.3"/><line x1="12.4" y1="12.4" x2="13.8" y2="13.8" stroke-width="1.3"/><line x1="13.8" y1="3.2" x2="12.4" y2="4.6" stroke-width="1.3"/><line x1="4.6" y1="12.4" x2="3.2" y2="13.8" stroke-width="1.3"/></svg>`,
+    'Ferah ve Aydınlık': `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="3" fill="currentColor" opacity=".18" stroke-width="1.5"/><circle cx="8.5" cy="8.5" r="3" stroke-width="1.5"/><line x1="8.5" y1="1" x2="8.5" y2="3" stroke-width="1.4"/><line x1="8.5" y1="14" x2="8.5" y2="16" stroke-width="1.4"/><line x1="1" y1="8.5" x2="3" y2="8.5" stroke-width="1.4"/><line x1="14" y1="8.5" x2="16" y2="8.5" stroke-width="1.4"/><line x1="3.2" y1="3.2" x2="4.6" y2="4.6" stroke-width="1.3"/><line x1="12.4" y1="12.4" x2="13.8" y2="13.8" stroke-width="1.3"/><line x1="13.8" y1="3.2" x2="12.4" y2="4.6" stroke-width="1.3"/><line x1="4.6" y1="12.4" x2="3.2" y2="13.8" stroke-width="1.3"/></svg>`,
   };
 
   const OZELLIKLER = [
@@ -870,13 +870,26 @@
   async function download() {
     showToast('Görsel hazırlanıyor...');
     try {
-      const cvs = await html2canvas(card, { scale:2, useCORS:true, backgroundColor:null, logging:false });
+      const cvs = await html2canvas(card, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#faf7f0',
+        logging: false,
+        width: card.offsetWidth,
+        height: card.offsetHeight,
+        onclone: (doc) => {
+          doc.querySelectorAll('svg').forEach(s => {
+            if (!s.getAttribute('xmlns')) s.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+          });
+        },
+      });
       const a = document.createElement('a');
       a.download = `ilan-${state.ilanTuru}-${Date.now()}.png`;
       a.href = cvs.toDataURL('image/png');
       a.click();
       showToast('Görsel indirildi ✓');
-    } catch { showToast('İndirme başarısız'); }
+    } catch(err) { showToast('İndirme başarısız: ' + (err && err.message ? err.message : '')); }
   }
 
   /* ── RESET ── */
